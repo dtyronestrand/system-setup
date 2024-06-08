@@ -10,7 +10,7 @@ echo "************************************************"
 echo ""
 
 # Variables
-PHP_VERSION="7.4"
+PHP_VERSION="8.2"
 GOLANG_VERSION="1.17.5"
 
 # Check if root
@@ -50,6 +50,14 @@ echo "Setting up your git global user name and email"
 git config --global user.name "$git_config_user_name"
 git config --global user.email $git_config_user_email
 
+# Docker
+echo "Installing Docker"
+wget https://gist.githubusercontent.com/welel/f80c96482e3b539487b9fa08bfcab86d/raw/90bc2330924d225aef7dc3178f5926bda7daff04/install_docker.sh
+chmod +x install_docker.sh
+./install_docker.sh
+systemctl start docker
+systemctl enable docker
+usermod -aG docker "dev"
 
 # Chrome
 echo "Installing Chrome"
@@ -64,11 +72,6 @@ wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
 add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main"
 apt-get -y update && apt install -y microsoft-edge-dev
 
-# Go
-echo "Installing GoLang"
-wget https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-tar -C /usr/local -xvzf go$GOLANG_VERSION.linux-amd64.tar.gz
-rm go$GOLANG_VERSION.linux-amd64.tar.gz
 
 # Node/NPM
 echo "Installing node"
@@ -106,23 +109,6 @@ echo "Installing dev tools"
 
 # Hugo
 apt-get -y update && apt-get install -y hugo
-
-# GoReleaser
-echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
-apt update && apt install -y goreleaser
-
-# KubeCTL
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-# Productivity
-echo "Installing productivity apps"
-snap install simplenote
-
-# Music / Video
-echo "Installing music and video apps"
-snap install spotify
-snap install vlc
 
 # ZSH
 echo 'Installing ZSH'
